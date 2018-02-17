@@ -1,24 +1,22 @@
-.PHONY: deps test
+.PHONY: compile rel cover test dialyzer
+REBAR=./rebar3
 
-all: deps compile
-
-compile: deps
-		./rebar compile
-
-deps:
-		./rebar get-deps
+compile:
+	$(REBAR) compile
 
 clean:
-		./rebar clean
+	$(REBAR) clean
 
-doc: all
-		./rebar doc
+cover: test
+	$(REBAR) cover
 
-perf_report: compile
-		erl -pa deps/*/ebin ebin -noshell -run hyper perf_report -s init stop
+test: compile
+	$(REBAR) as test do eunit
 
-estimate_report: compile
-		erl -pa deps/*/ebin ebin -noshell -run hyper estimate_report -s init stop
-		bin/plot.R
+dialyzer:
+	$(REBAR) dialyzer
 
-include tools.mk
+xref:
+	$(REBAR) xref
+
+check: test dialyzer xref

@@ -62,7 +62,7 @@ serialization_t() ->
 
 
 reduce_precision_t() ->
-    random:seed(1, 2, 3),
+    rand:seed(exsp, {1, 2, 3}),
     Card = 1000,
     Values = generate_unique(Card),
     [begin
@@ -191,7 +191,7 @@ error_range_t() ->
           end,
     ExpectedError = 0.02,
     P = 14,
-    random:seed(1, 2, 3),
+    rand:seed(exsp, {1, 2, 3}),
 
     [begin
          Estimate = trunc(hyper:card(Run(Card, P, Mod))),
@@ -200,7 +200,7 @@ error_range_t() ->
             Mod <- Mods].
 
 many_union_t() ->
-    random:seed(1, 2, 3),
+    rand:seed(exsp, {1, 2, 3}),
     Card = 100,
     NumSets = 3,
 
@@ -241,7 +241,7 @@ many_union_t() ->
 
 
 union_t() ->
-    random:seed(1, 2, 3),
+    rand:seed(exsp, {1, 2, 3}),
     Mod = hyper_binary_rle,
 
     LeftDistinct = sets:from_list(generate_unique(100)),
@@ -282,7 +282,7 @@ union_mixed_precision_t() ->
 
 
 intersect_card_t() ->
-    random:seed(1, 2, 3),
+    rand:seed(exsp, {1, 2, 3}),
 
     LeftDistinct = sets:from_list(generate_unique(10000)),
 
@@ -308,7 +308,7 @@ bad_serialization_t() ->
     [begin
          P = 15,
          M = trunc(math:pow(2, P)),
-         {ok, WithNewlines} = file:read_file("../test/filter.txt"),
+         {ok, WithNewlines} = file:read_file("test/filter.txt"),
          Raw = case zlib:gunzip(
                       base64:decode(
                         binary:replace(WithNewlines, <<"\n">>, <<>>))) of
@@ -350,9 +350,9 @@ gen_values() ->
     ?SIZED(Size, gen_values(Size)).
 
 gen_values(0) ->
-    [<<(random:uniform(100000000000000)):64/integer>>];
+    [<<(rand:uniform(100000000000000)):64/integer>>];
 gen_values(Size) ->
-    [<<(random:uniform(100000000000000)):64/integer>> | gen_values(Size-1)].
+    [<<(rand:uniform(100000000000000)):64/integer>> | gen_values(Size-1)].
 
 gen_getset(P) ->
     ?SIZED(Size, gen_getset(Size, P)).
@@ -457,7 +457,7 @@ random_bytes(N) ->
 
 random_bytes(Acc, 0) -> Acc;
 random_bytes(Acc, N) ->
-    Int = random:uniform(100000000000000),
+    Int = rand:uniform(100000000000000),
     random_bytes([<<Int:64/integer>> | Acc], N-1).
 
 

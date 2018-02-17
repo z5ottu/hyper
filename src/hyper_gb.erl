@@ -67,7 +67,7 @@ bytes({T, _}) ->
     erts_debug:flat_size(T) * 8.
 
 
--spec register_sum({gb_tree(),number()}) -> float().
+-spec register_sum({gb_trees:tree(),number()}) -> float().
 register_sum({T, M}) ->
     {MaxI, Sum} = fold(fun (Index, Value, {I, Acc}) ->
                             Zeroes = Index - I - 1,
